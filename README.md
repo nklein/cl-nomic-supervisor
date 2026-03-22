@@ -19,6 +19,10 @@
 
 Need to figure out GitHub webhooks that will notify me when there is
 a new code-review on an open pull-request for a given repo.
+It looks like I can have a webhook call me back any time there is
+a change to a `pull_request_review`. It is unclear to me how I can
+see from the `pull_request` in the `pull_request_review` what branch
+is trying to merge to where, but I will figure it out.
 
 Supervisor will, on startup:
 * clone the `main` branch and tags of the `cl-nomic-game` repository to `/game`,
