@@ -1,0 +1,14 @@
+services:
+  nomic-supervisor:
+    build: .
+    ports:
+      - "${PORT}:${PORT}"
+    environment:
+      PORT: ${PORT}
+      GIT_REPO_URL: ${GIT_REPO_URL}
+      GIT_DEFAULT_BRANCH: ${GIT_DEFAULT_BRANCH}
+    volumes:
+      - nomic-supervisor-data:/data
+
+volumes:
+  nomic-supervisor-data:

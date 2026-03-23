@@ -79,16 +79,20 @@ RUN set -x \
     && sbcl --version
 
 RUN apk add bubblewrap \
+    && apk add sqlite-libs \
     && apk add git \
     && git config --global user.name "CL-NOMIC Supervisor" \
     && git config --global user.email "pat@nklein.com"
 
 RUN mkdir /game
+RUN mkdir /data
 
 WORKDIR /supervisor
 
-COPY UNLICENSE.txt README.md cl-nomic-supervisor.asd ./
+COPY UNLICENSE.txt ./
+COPY README.md ./
 COPY quicklisp/ ./quicklisp/
+COPY cl-nomic-supervisor.asd ./
 COPY src/ ./src/
 
 RUN sbcl --noinform \
