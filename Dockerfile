@@ -83,6 +83,12 @@ WORKDIR /supervisor
 COPY UNLICENSE.txt README.md cl-nomic-supervisor.asd ./
 COPY src/ ./src/
 
+RUN sbcl --noinform \
+         --eval "(require \"asdf\")" \
+         --load "cl-nomic-supervisor.asd" \
+         --eval "(asdf:load-system :cl-nomic-supervisor)" \
+         --quit
+
 CMD ["sbcl", "--noinform", \
              "--eval", "(require \"asdf\")", \
              "--load", "cl-nomic-supervisor.asd", \
