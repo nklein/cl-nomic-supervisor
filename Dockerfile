@@ -78,6 +78,12 @@ RUN set -x \
     && rm -rf "$GNUPGHOME" ./* \
     && sbcl --version
 
+RUN apk add git \
+    && git config --global user.name "CL-NOMIC Supervisor" \
+    && git config --global user.email "pat@nklein.com"
+
+RUN mkdir /game
+
 WORKDIR /supervisor
 
 COPY UNLICENSE.txt README.md cl-nomic-supervisor.asd ./
@@ -85,13 +91,11 @@ COPY quicklisp/ ./quicklisp/
 COPY src/ ./src/
 
 RUN sbcl --noinform \
-         --eval "(require \"asdf\")" \
          --load "cl-nomic-supervisor.asd" \
          --eval "(asdf:load-system :cl-nomic-supervisor)" \
          --quit
 
 CMD ["sbcl", "--noinform", \
-             "--eval", "(require \"asdf\")", \
              "--load", "cl-nomic-supervisor.asd", \
              "--eval", "(asdf:load-system :cl-nomic-supervisor)", \
              "--eval", "(cl-nomic-supervisor:start)", \
