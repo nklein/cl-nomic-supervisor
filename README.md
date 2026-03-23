@@ -64,9 +64,16 @@ it will revert the last merge request and then restart.
 
 ### bwrap command-line
 
+    echo '(asdf:defsystem :game :components ((:file "game")))' > /game/game.asd
     echo '(with-standard-io-syntax (print (list :winner "pat")) (terpri))' > /game/game.lisp
     bwrap --ro-bind /lib /lib \
           --ro-bind /usr/local /usr/local \
-          --ro-bind /game /game \
+          --bind /game /game \
           --unshare-all \
-          /usr/local/bin/sbcl --noinform --load '/game/game.lisp' --quit
+          /usr/local/bin/sbcl --noinform \
+                              --eval '(setf *compile-verbose* nil)' \
+                              --eval '(setf *load-verbose* nil)' \
+                              --eval '(require "asdf")' \
+                              --load '/game/game.asd' \
+                              --eval '(asdf:load-system :game)' \
+                              --quit
