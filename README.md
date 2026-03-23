@@ -61,3 +61,12 @@ When the supervisor recevies a `:not-yet` message, it will do nothing.
 
 When the supervisor receives any other message (or no message at all),
 it will revert the last merge request and then restart.
+
+### bwrap command-line
+
+    echo '(with-standard-io-syntax (print (list :winner "pat")) (terpri))' > /game/game.lisp
+    bwrap --ro-bind /lib /lib \
+          --ro-bind /usr/local /usr/local \
+          --ro-bind /game /game \
+          --unshare-all \
+          /usr/local/bin/sbcl --noinform --load '/game/game.lisp' --quit

@@ -78,7 +78,8 @@ RUN set -x \
     && rm -rf "$GNUPGHOME" ./* \
     && sbcl --version
 
-RUN apk add git \
+RUN apk add bubblewrap \
+    && apk add git \
     && git config --global user.name "CL-NOMIC Supervisor" \
     && git config --global user.email "pat@nklein.com"
 
