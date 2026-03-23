@@ -81,6 +81,7 @@ RUN set -x \
 WORKDIR /supervisor
 
 COPY UNLICENSE.txt README.md cl-nomic-supervisor.asd ./
+COPY quicklisp/ ./quicklisp/
 COPY src/ ./src/
 
 RUN sbcl --noinform \

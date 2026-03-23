@@ -2,6 +2,10 @@
 
 ## Use of Docker
 
+### Preparing quicklisp bundles
+
+    (ql:bundle-systems '(:yason) :to #P"./quicklisp")
+
 ### Building with Docker
 
     VERSION=0.1.20260322
