@@ -97,6 +97,6 @@ RUN sbcl --noinform \
 
 CMD ["sbcl", "--noinform", \
              "--load", "cl-nomic-supervisor.asd", \
-             "--eval", "(asdf:load-system :cl-nomic-supervisor)", \
+             "--eval", "(with-output-to-string (*error-output*) (asdf:load-system :cl-nomic-supervisor))", \
              "--eval", "(cl-nomic-supervisor:start)", \
              "--quit"]
