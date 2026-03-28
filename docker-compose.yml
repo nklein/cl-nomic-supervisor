@@ -5,10 +5,7 @@ services:
       - "${PORT}:${PORT}"
     environment:
       PORT: ${PORT}
-      GIT_REPO_URL: ${GIT_REPO_URL}
-      GIT_DEFAULT_BRANCH: ${GIT_DEFAULT_BRANCH}
-    volumes:
-      - nomic-supervisor-data:/data
-
-volumes:
-  nomic-supervisor-data:
+      GITHUB_SUPERVISOR_TOKEN: ${GITHUB_SUPERVISOR_TOKEN}
+      GITHUB_REPO_OWNER: ${GITHUB_REPO_OWNER}
+      GITHUB_REPO_NAME: ${GITHUB_REPO_NAME}
+      GITHUB_DEFAULT_BRANCH: ${GITHUB_DEFAULT_BRANCH}
