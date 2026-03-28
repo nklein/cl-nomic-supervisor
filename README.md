@@ -33,9 +33,9 @@ Supervisor will, on startup:
 * if there is a `game-over` tag, the supervisor will exit,
 * otherwise it will:
   * fetch the latest code reviews results,
-  * fetch all info about that pull request and its code reviews,
+  * fetch all info about those pull requests and their code reviews,
   * run the game in a sandbox,
-  * send the game info about the pull request and its code reviews,
+  * send the game info about the pull requests,
   * get the response from the client,
   * kill the client,
   * act on the client response, and
@@ -44,8 +44,8 @@ Supervisor will, on startup:
 The responses from the client will be one of:
 
     {decision: "winner", name: "name-of-winner"}
-    {decision: "accept"}
-    {decision: "reject"}
+    {decision: "accept", pr: number}
+    {decision: "reject", pr: number}
     {decision: "defer"}
 
 When the supervisor receives a `"winner"` message, it will add an empty
@@ -110,9 +110,12 @@ With something like this in `/game/start.sh`:
                              --eval '(require "asdf")' \
                              --eval '(load "./game.asd")' \
                              --eval '(asdf:load-system :game)' \
-                             --quit
+                             --quit \
+           0< /dev/stdin \
+           1> /dev/stdout \
+           2> /dev/stderr
 
 But, a super simple game could instead have `/game/start.sh`:
 
     #!/bin/sh
-    echo '{decision: "winner", name: "patrick"}'
+    echo '{decision: "winner", name: "patrick"}' > /dev/stdout
