@@ -81,14 +81,15 @@
                                                      (repo *github-repo-name*))
     ("repos" owner repo "issues" pull-number "comments"))
 
-(defun expand-pull-request (pull-request)
+(defun expand-pull-request (pull-request &optional id)
   (let* ((pull-number (json-attr "number" pull-request))
          (comments (list-pull-request-comments pull-number))
          (reviews (list-pull-request-reviews pull-number)))
-    (json-object `(("number" . ,pull-number)
+    (json-object `(("id" . ,(or id
+                                pull-number))
                    ("pull-request" . ,pull-request)
-                   ("comments" . ,comments)
-                   ("reviews" . ,reviews)))))
+                   ("reviews" . ,reviews)
+                   ("comments" . ,comments)))))
 
 (defun get-all-expanded-pull-requests (&rest
                                          rest
@@ -98,8 +99,9 @@
                                          (repo *github-repo-name*)
                                        &allow-other-keys)
   (declare (ignore state owner repo))
-  (mapcar #'expand-pull-request
-          (apply #'list-pull-requests rest)))
+  (loop :for pull-request :in (apply #'list-pull-requests rest)
+        :for id :from 1
+        :collecting (expand-pull-request pull-request id)))
 
 #+(or)
 (progn
