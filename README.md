@@ -4,7 +4,7 @@
 
 ### Preparing quicklisp bundles
 
-    (ql:bundle-systems '(:sqlite :ironclad :yason :dexador :toot) :to #P"./quicklisp")
+    (ql:bundle-systems '(:alexandria :sqlite :ironclad :yason :dexador :toot) :to #P"./quicklisp")
 
 ### Building with Docker
 
@@ -14,6 +14,10 @@
 ### Running with Docker
 
     docker run cl-nomic-supervisor
+
+### Loading .env file
+
+    set -o allexport; . ./.env; set +o allexport
 
 ## Development Notes
 
