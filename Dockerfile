@@ -1,7 +1,7 @@
 FROM alpine:3.23
 
 ENV SBCL_VERSION=2.4.0
-ENV SBCL_SIGNING_KEY=D6839CA0A67F74D9DFB70922EBD595A9100D63CD
+ENV SBCL_PUBLIC_KEY=D6839CA0A67F74D9DFB70922EBD595A9100D63CD
 
 WORKDIR /usr/local/src/
 
@@ -64,7 +64,7 @@ RUN set -x \
        fi \
     && GNUPGHOME="$(mktemp -d)" \
     && export GNUPGHOME \
-    && import_key "$SBCL_SIGNING_KEY" \
+    && import_key "$SBCL_PUBLIC_KEY" \
     && download_and_validate_hashes "$SBCL_VERSION" \
     && download_source "$SBCL_VERSION" \
     && build_and_install_source "$SBCL_VERSION" "$HOST_LISP" \
@@ -96,12 +96,12 @@ COPY cl-nomic-supervisor.asd ./
 COPY src/ ./src/
 
 RUN sbcl --noinform \
-         --load "cl-nomic-supervisor.asd" \
-         --eval "(asdf:load-system :cl-nomic-supervisor)" \
+         --eval "(load \"cl-nomic-supervisor.asd\")" \
+         --eval "(require :cl-nomic-supervisor)" \
          --quit
 
-CMD ["sbcl", "--noinform", \
-             "--load", "cl-nomic-supervisor.asd", \
-             "--eval", "(with-output-to-string (*error-output*) (asdf:load-system :cl-nomic-supervisor))", \
-             "--eval", "(cl-nomic-supervisor:start)", \
-             "--quit"]
+ENTRYPOINT ["sbcl", "--noinform", \
+                    "--eval", "(load \"cl-nomic-supervisor.asd\")", \
+                    "--eval", "(require :cl-nomic-supervisor)", \
+                    "--eval", "(cl-nomic-supervisor:start)", \
+                    "--quit"]
