@@ -21,6 +21,9 @@
 
 ## Development Notes
 
+* **TODO:** Need to add information about commits so that the decision-maker
+  can take into account comments that happened before the last commit.
+
 Need to figure out GitHub webhooks that will notify me when there is
 a new code-review on an open pull-request for a given repo.
 It looks like I can have a webhook call me back any time there is
