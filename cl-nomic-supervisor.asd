@@ -9,7 +9,7 @@
   :author "Patrick Stein <pat@nklein.com>"
   :license "UNLICENSE"
   :version "0.1.20260322"
-  :depends-on (:sqlite :ironclad :yason :dexador :toot)
+  :depends-on (:alexandria :sqlite :ironclad :yason :dexador :toot)
   :components
   ((:static-file "README.md")
    (:static-file "UNLICENSE.txt")
@@ -18,4 +18,7 @@
                  (:file "cli" :depends-on ("package"))
                  (:file "git-cli" :depends-on ("package"
                                                "cli"))
+                 (:file "http-constants" :depends-on ("package"))
+                 (:file "github-api" :depends-on ("package"
+                                                  "http-constants"))
                  (:file "start" :depends-on ("package"))))))
