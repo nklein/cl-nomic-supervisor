@@ -13,6 +13,12 @@
         *github-repo-owner* (uiop:getenv "GITHUB_REPO_OWNER")
         *github-repo-name* (uiop:getenv "GITHUB_REPO_NAME")))
 
+#+(or)
+(setf *github-api-token* "API-TOKEN-HERE"
+      *github-repo-owner* "nklein"
+      *github-repo-name* "cl-nomic-game-test"
+      *github-default-branch* "main")
+
 (defun %github-api (method path-as-list
                     &key
                       (token *github-api-token*)
@@ -39,11 +45,9 @@
                               ("Accept" . "application/vnd.github+json")
                               ("X-GitHub-Api-Version" . ,api-version))
                    :content (when body
-                              (yason:with-output-to-string* ()
-                                body)))
+                              (json-encode body)))
 
-    (values (let ((yason:*parse-object-as* :alist))
-              (yason:parse response-body))
+    (values (json-parse response-body)
             response-status)))
 
 (defmacro define-github-api (name (method (&rest required-args)
@@ -77,43 +81,35 @@
                                                      (repo *github-repo-name*))
     ("repos" owner repo "issues" pull-number "comments"))
 
-#+(or)
-(setf *github-api-token* "API-TOKEN-HERE"
-      *github-repo-owner* "nklein"
-      *github-repo-name* "cl-nomic-game-test")
+(defun expand-pull-request (pull-request)
+  (let* ((pull-number (json-attr "number" pull-request))
+         (comments (list-pull-request-comments pull-number))
+         (reviews (list-pull-request-reviews pull-number)))
+    (json-object `(("number" . ,pull-number)
+                   ("pull-request" . ,pull-request)
+                   ("comments" . ,comments)
+                   ("reviews" . ,reviews)))))
+
+(defun get-all-expanded-pull-requests (&rest
+                                         rest
+                                       &key
+                                         (state "open")
+                                         (owner *github-repo-owner*)
+                                         (repo *github-repo-name*)
+                                       &allow-other-keys)
+  (declare (ignore state owner repo))
+  (mapcar #'expand-pull-request
+          (apply #'list-pull-requests rest)))
 
 #+(or)
-(list-pull-requests :state "all")
+(progn
+  (json-encode (get-all-expanded-pull-requests)
+               *debug-io*)
+  (values))
 
 #+(or)
 (flet ((get-updated-at-timestamp (pr)
-         (local-time:parse-rfc3339-timestring (attr "updated_at" pr))))
+         (local-time:parse-rfc3339-timestring (json-attr "updated_at" pr))))
   (stable-sort (list-pull-requests :state "all")
                #'local-time:timestamp<
                :key #'get-updated-at-timestamp))
-
-#+(or)
-(list-pull-request-reviews 1)
-
-#+(or)
-(list-pull-request-comments 2)
-
-#+(or)
-(let (results)
-  (dolist (pull (list-pull-requests :state "all") results)
-    (let ((votes)
-          (all-comments)
-          (state (attr "state" pull))
-          (number (attr "number" pull)))
-      (dolist (comment
-               (list-pull-request-comments number)
-               (push (list number
-                           state
-                           (list* :votes (nreverse votes))
-                           (list* :comments (nreverse all-comments)))
-                     results))
-        (let ((user (attr "login" (attr "user" comment)))
-              (body (attr "body" comment)))
-          (push (cons user body) all-comments)
-          (when (member body '("APPROVED" "REJECTED") :test #'string=)
-            (push (cons user body) votes)))))))

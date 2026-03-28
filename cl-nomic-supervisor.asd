@@ -20,7 +20,9 @@
                                                "cli"))
                  (:file "http-constants" :depends-on ("package"))
                  (:file "http-utils" :depends-on ("package"))
+                 (:file "json-utils" :depends-on ("package"))
                  (:file "github-api" :depends-on ("package"
                                                   "http-constants"
-                                                  "http-utils"))
+                                                  "http-utils"
+                                                  "json-utils"))
                  (:file "start" :depends-on ("package"))))))

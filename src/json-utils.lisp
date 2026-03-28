@@ -1,0 +1,24 @@
+(in-package :cl-nomic-supervisor)
+
+(defun json-parse (string)
+  (let ((yason:*parse-object-as* :hash-table)
+        (yason:*parse-json-booleans-as-symbols* t)
+        (yason:*parse-json-null-as-keyword* t))
+    (yason:parse string)))
+
+(defparameter *json-indent* 2)
+
+(defun json-encode (json-object &optional (stream *debug-io*))
+  (yason:with-output (stream :indent *json-indent*)
+    (yason:encode json-object)))
+
+(defun json-encode* (json-object)
+  (yason:with-output-to-string* (:indent *json-indent*)
+    (yason:encode json-object)))
+
+(defun json-attr (name json-object &optional default)
+  (gethash name json-object default))
+
+(defun json-object (alist)
+  (alexandria:alist-hash-table alist
+                               :test 'equalp))
