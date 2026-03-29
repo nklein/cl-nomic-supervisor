@@ -1,10 +1,10 @@
 (in-package :cl-nomic-supervisor)
 
-(defun json-parse (string)
+(defun json-parse (string-or-stream)
   (let ((yason:*parse-object-as* :hash-table)
         (yason:*parse-json-booleans-as-symbols* t)
         (yason:*parse-json-null-as-keyword* t))
-    (yason:parse string)))
+    (yason:parse string-or-stream)))
 
 (defparameter *json-indent* 2)
 

@@ -64,6 +64,11 @@
               ,@body
               ,rest))))
 
+(define-github-api repository-events (+GET+ ()
+                                            (owner *github-repo-owner*)
+                                            (repo *github-repo-name*))
+    ("repos" owner repo "events"))
+
 (define-github-api list-pull-requests (+GET+ ()
                                              (state "open")
                                              (owner *github-repo-owner*)
@@ -81,31 +86,44 @@
                                                      (repo *github-repo-name*))
     ("repos" owner repo "issues" pull-number "comments"))
 
-(defun expand-pull-request (pull-request &optional id)
+(define-github-api list-pull-request-commits (+GET+ (pull-number)
+                                                    (owner *github-repo-owner*)
+                                                    (repo *github-repo-name*))
+    ("repos" owner repo "pulls" pull-number "commits"))
+
+(defun augment-pull-request (pull-request &optional id)
   (let* ((pull-number (json-attr "number" pull-request))
          (comments (list-pull-request-comments pull-number))
-         (reviews (list-pull-request-reviews pull-number)))
+         (reviews (list-pull-request-reviews pull-number))
+         (commits (list-pull-request-commits pull-number)))
     (json-object `(("id" . ,(or id
                                 pull-number))
                    ("pull-request" . ,pull-request)
                    ("reviews" . ,reviews)
-                   ("comments" . ,comments)))))
+                   ("comments" . ,comments)
+                   ("commits" . ,commits)))))
 
-(defun get-all-expanded-pull-requests (&rest
-                                         rest
-                                       &key
-                                         (state "open")
-                                         (owner *github-repo-owner*)
-                                         (repo *github-repo-name*)
-                                       &allow-other-keys)
+(defun get-all-augmented-pull-requests (&rest
+                                          rest
+                                        &key
+                                          (state "open")
+                                          (owner *github-repo-owner*)
+                                          (repo *github-repo-name*)
+                                        &allow-other-keys)
   (declare (ignore state owner repo))
   (loop :for pull-request :in (apply #'list-pull-requests rest)
         :for id :from 1
-        :collecting (expand-pull-request pull-request id)))
+        :collecting (augment-pull-request pull-request id)))
 
 #+(or)
 (progn
-  (json-encode (get-all-expanded-pull-requests)
+  (json-encode (repository-events)
+               *debug-io*)
+  (values))
+
+#+(or)
+(progn
+  (json-encode (get-all-augmented-pull-requests)
                *debug-io*)
   (values))
 
