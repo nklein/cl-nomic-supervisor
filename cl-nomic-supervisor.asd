@@ -9,7 +9,7 @@
   :author "Patrick Stein <pat@nklein.com>"
   :license "UNLICENSE"
   :version "0.1.20260322"
-  :depends-on (:alexandria :quri :local-time :sqlite :ironclad :yason :dexador :toot)
+  :depends-on (:alexandria :quri :local-time :yason :dexador :toot)
   :components
   ((:static-file "README.md")
    (:static-file "UNLICENSE.txt")
