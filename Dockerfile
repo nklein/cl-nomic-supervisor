@@ -92,15 +92,31 @@ WORKDIR /supervisor
 COPY UNLICENSE.txt ./
 COPY README.md ./
 COPY quicklisp/ ./quicklisp/
+
+RUN sbcl --noinform \
+         --disable-debugger \
+         --no-userinit \
+         --eval "(load \"./quicklisp/bundle.lisp\")" \
+         --eval "(dolist (pkg '(:alexandria :quri :local-time :yason :dexador :toot)) (require pkg))" \
+         --quit
+
+
+RUN mkdir -p /tmp
+COPY sample.json /tmp/sample.json
+
 COPY cl-nomic-supervisor.asd ./
 COPY src/ ./src/
 
 RUN sbcl --noinform \
+         --disable-debugger \
+         --no-userinit \
          --eval "(load \"cl-nomic-supervisor.asd\")" \
          --eval "(require :cl-nomic-supervisor)" \
          --quit
 
 ENTRYPOINT ["sbcl", "--noinform", \
+                    "--disable-debugger", \
+                    "--no-userinit", \
                     "--eval", "(load \"cl-nomic-supervisor.asd\")", \
                     "--eval", "(require :cl-nomic-supervisor)", \
                     "--eval", "(cl-nomic-supervisor:start)", \

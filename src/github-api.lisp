@@ -8,16 +8,10 @@
 (defvar *github-repo-owner* nil)
 (defvar *github-repo-name* nil)
 
-(eval-when (:execute)
-  (setf *github-api-token* (uiop:getenv "GITHUB_SUPERVISOR_TOKEN")
-        *github-repo-owner* (uiop:getenv "GITHUB_REPO_OWNER")
-        *github-repo-name* (uiop:getenv "GITHUB_REPO_NAME")))
-
 #+(or)
 (setf *github-api-token* "API-TOKEN-HERE"
       *github-repo-owner* "nklein"
-      *github-repo-name* "cl-nomic-game-test"
-      *github-default-branch* "main")
+      *github-repo-name* "cl-nomic-game-test")
 
 (defun %github-api (method path-as-list
                     &key
@@ -117,19 +111,6 @@
 
 #+(or)
 (progn
-  (json-encode (repository-events)
-               *debug-io*)
-  (values))
-
-#+(or)
-(progn
   (json-encode (get-all-augmented-pull-requests)
                *debug-io*)
   (values))
-
-#+(or)
-(flet ((get-updated-at-timestamp (pr)
-         (local-time:parse-rfc3339-timestring (json-attr "updated_at" pr))))
-  (stable-sort (list-pull-requests :state "all")
-               #'local-time:timestamp<
-               :key #'get-updated-at-timestamp))

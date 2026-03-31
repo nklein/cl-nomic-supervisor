@@ -13,9 +13,9 @@
 
 ### Running with Docker
 
-    docker run cl-nomic-supervisor
+    docker run --env-file .env cl-nomic-supervisor
 
-### Loading .env file
+### Loading .env file for local use
 
     set -o allexport; . ./.env; set +o allexport
 

@@ -21,8 +21,11 @@
                  (:file "http-constants" :depends-on ("package"))
                  (:file "http-utils" :depends-on ("package"))
                  (:file "json-utils" :depends-on ("package"))
+                 (:file "reader-macro" :depends-on ("package"
+                                                    "json-utils"))
                  (:file "github-api" :depends-on ("package"
                                                   "http-constants"
                                                   "http-utils"
                                                   "json-utils"))
-                 (:file "start" :depends-on ("package"))))))
+                 (:file "start" :depends-on ("package"
+                                             "github-api"))))))

@@ -22,12 +22,12 @@
   (check-type destination (or pathname string))
 
   (let ((*git-working-copy-dir* nil))
-    (%git-command  "clone"
-                   "--single-branch"
-                   "--tags"
-                   "--branch" branch-name
-                   repo-url
-                   (namestring destination))))
+    (%git-command "clone"
+                  "--single-branch"
+                  "--tags"
+                  "--branch" branch-name
+                  repo-url
+                  (namestring destination))))
 
 (defun git-fetch-branch (&key
                            (remote-name *git-default-remote*)

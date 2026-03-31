@@ -1,7 +1,6 @@
 (in-package :cl-nomic-supervisor)
 
 (defun cli-command (command &rest arguments)
-  (format *debug-io* "RUN: ~A~%" (list* command arguments))
   (uiop:run-program (list* command
                            arguments)
                     :output 'cl:string
