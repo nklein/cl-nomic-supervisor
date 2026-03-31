@@ -90,7 +90,6 @@ RUN mkdir /data
 WORKDIR /supervisor
 
 COPY UNLICENSE.txt ./
-COPY README.md ./
 COPY quicklisp/ ./quicklisp/
 
 RUN sbcl --noinform \
@@ -100,6 +99,7 @@ RUN sbcl --noinform \
          --eval "(dolist (pkg '(:alexandria :quri :local-time :yason :dexador :toot)) (require pkg))" \
          --quit
 
+COPY README.md ./
 
 RUN mkdir -p /tmp
 COPY sample.json /tmp/sample.json
