@@ -27,5 +27,22 @@
                                                   "http-constants"
                                                   "http-utils"
                                                   "json-utils"))
+                 (:file "game" :depends-on ("package"))
+                 (:file "handle-winner" :depends-on ("package"
+                                                     "github-api"))
+                 (:file "handle-accept" :depends-on ("package"
+                                                     "github-api"))
+                 (:file "handle-reject" :depends-on ("package"
+                                                     "github-api"))
+                 (:file "handle-defer" :depends-on ("package"))
+                 (:file "handle-unknown" :depends-on ("package"
+                                                      "github-api"))
                  (:file "start" :depends-on ("package"
-                                             "github-api"))))))
+                                             "cli"
+                                             "github-api"
+                                             "handle-winner"
+                                             "handle-accept"
+                                             "handle-reject"
+                                             "handle-defer"
+                                             "handle-unknown"
+                                             "game"))))))

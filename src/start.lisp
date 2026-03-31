@@ -1,33 +1,10 @@
 (in-package :cl-nomic-supervisor)
 
-(defparameter *game-directory* #P"/game/")
-
-(defun invoke-game (list-of-augmented)
-  (let ((encoded (with-output-to-string (*standard-output*)
-                   (json-encode list-of-augmented *standard-output*))))
-    (with-input-from-string (*standard-input* encoded)
-      (uiop:run-program (list #P"/usr/bin/bwrap"
-                              "--ro-bind" "/bin" "/bin"
-                              "--ro-bind" "/lib" "/lib"
-                              "--ro-bind" "/usr/bin" "/usr/bin"
-                              "--ro-bind" "/usr/local" "/usr/local"
-                              "--bind" "/game" "/game"
-                              "--unshare-all"
-                              "--unshare-user"
-                              "--uid" "1001"
-                              "--gid" "1001"
-                              "--hostname" "nomic-game"
-                              "--chdir" "/game"
-                              "--clearenv"
-                              "--setenv" "HOME" "/game"
-                              "--setenv" "PATH" "/bin:/usr/bin:/usr/local/bin"
-                              "--new-session"
-                              "/game/start.sh")
-                        :input *standard-input*
-                        :output 'cl:string
-                        :error-output 'cl:string
-                        :ignore-error-status t
-                        :force-shell nil))))
+(defun find-augmented-by-id (id list-of-augmented)
+  (flet ((get-augmented-id (augmented)
+           #{augmented id}))
+    (find id list-of-augmented
+          :key #'get-augmented-id)))
 
 (defun %start ()
   (let ((list-of-augmented (or (with-open-file (*standard-input* #P"/tmp/sample.json")
@@ -35,8 +12,29 @@
                                (get-all-augmented-pull-requests))))
     (when list-of-augmented
       (cli-chain
-        (git-clone-repo-branch)
-        (invoke-game list-of-augmented)))))
+        (git-clone-repo-branch))
+      (let ((response-string (with-output-to-string (*standard-output*)
+                               (cli-chain
+                                 (invoke-game list-of-augmented)))))
+        (handler-case
+            (let* ((response (json-parse response-string))
+                   (decision (string-downcase #{response decision})))
+              (cond
+                ((string= "winner" decision)
+                 (handle-winner #{response name}
+                                (ignore-errors #{response message})))
+                ((string= "accept" decision)
+                 (handle-accept (find-augmented-by-id #{response id} list-of-augmented)
+                                (ignore-errors #{response message})))
+                ((string= "reject" decision)
+                 (handle-reject (find-augmented-by-id #{response id} list-of-augmented)))
+                (t
+                 (handle-unknown response))))
+          (error (err)
+            (let ((*print-escape* nil))
+              (format *error-output* "GOT: ~A~%" err))
+            (error 'simple-error :format-control "Error handling: ~S~%"
+                                 :format-arguments (list response-string))))))))
 
 (defun start ()
   (handler-case
