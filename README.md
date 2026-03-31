@@ -46,9 +46,9 @@ Supervisor will, on startup:
 
 The responses from the client will be one of:
 
-    {decision: "winner", name: "name-of-winner"}
-    {decision: "accept", pr: id}
-    {decision: "reject", pr: id}
+    {decision: "winner", name: "name-of-winner", message: "optional explanation"}
+    {decision: "accept", pr: id, message: "optional explanation"}
+    {decision: "reject", pr: id, message: "optional explanation"}
     {decision: "defer"}
 
 When the supervisor receives a `"winner"` message, it will add an empty

@@ -98,7 +98,7 @@
          (commits (list-pull-request-commits pull-number)))
     (json-object `(("id" . ,(or id
                                 pull-number))
-                   ("pull-request" . ,pull-request)
+                   ("pull_request" . ,pull-request)
                    ("reviews" . ,reviews)
                    ("comments" . ,comments)
                    ("commits" . ,commits)))))
