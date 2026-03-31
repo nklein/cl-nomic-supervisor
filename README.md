@@ -90,7 +90,7 @@ with non-zero status?
           --new-session \
           --hostname nomic-game \
           --chdir /game \
-          --unsetenv \
+          --clearenv \
           --setenv HOME /game \
           --setenv PATH "/bin:/usr/bin:/usr/local/bin" \
           --die-with-parent
@@ -113,10 +113,7 @@ With something like this in `/game/start.sh`:
                              --eval '(require "asdf")' \
                              --eval '(load "./game.asd")' \
                              --eval '(asdf:load-system :game)' \
-                             --quit \
-           0< /dev/stdin \
-           1> /dev/stdout \
-           2> /dev/stderr
+                             --quit
 
 But, a super simple game could instead have `/game/start.sh`:
 

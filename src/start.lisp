@@ -2,24 +2,6 @@
 
 (defparameter *game-directory* #P"/game/")
 
-(defmacro relay-output (() &body cmd)
-  (let ((output (gensym "OUTPUT-"))
-        (error-output (gensym "ERROR-OUTPUT-"))
-        (code (gensym "CODE-")))
-    `(multiple-value-bind (,output ,error-output ,code) ,@cmd
-       (let ((*print-pretty* t))
-         (when ,error-output
-           (princ ,error-output *error-output*)
-           (fresh-line *error-output*))
-         (when ,output
-           (princ ,output *standard-output*)
-           (fresh-line *standard-output*)))
-       (unless (zerop ,code)
-         (error 'simple-error
-                :format-control "Exit code ~A for ~S"
-                :format-arguments (list ,code ',cmd)))
-       t)))
-
 (defun invoke-game (list-of-augmented)
   (let ((encoded (with-output-to-string (*standard-output*)
                    (json-encode list-of-augmented *standard-output*))))
@@ -36,9 +18,11 @@
                               "--gid" "1001"
                               "--hostname" "nomic-game"
                               "--chdir" "/game"
-                              "--unsetenv"
+                              "--clearenv"
+                              "--setenv" "HOME" "/game"
+                              "--setenv" "PATH" "/bin:/usr/bin:/usr/local/bin"
                               "--new-session"
-                              "/bin/sh" "/game/start.sh")
+                              "/game/start.sh")
                         :input *standard-input*
                         :output 'cl:string
                         :error-output 'cl:string
@@ -50,10 +34,9 @@
                                  (json-parse *standard-input*))
                                (get-all-augmented-pull-requests))))
     (when list-of-augmented
-      (and (relay-output ()
-             (git-clone-repo-branch))
-           (relay-output ()
-             (invoke-game list-of-augmented))))))
+      (cli-chain
+        (git-clone-repo-branch)
+        (invoke-game list-of-augmented)))))
 
 (defun start ()
   (handler-case
