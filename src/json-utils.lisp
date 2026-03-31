@@ -21,4 +21,4 @@
 
 (defun json-object (alist)
   (alexandria:alist-hash-table alist
-                               :test 'equalp))
+                               :test 'equal))
