@@ -1,5 +1,8 @@
 (in-package :cl-nomic-supervisor)
 
+(deftype json-object ()
+  'hash-table)
+
 (defun json-parse (string-or-stream)
   (let ((yason:*parse-object-as* :hash-table)
         (yason:*parse-json-booleans-as-symbols* t)
@@ -8,7 +11,7 @@
 
 (defparameter *json-indent* 2)
 
-(defun json-encode (json-object &optional (stream *debug-io*))
+(defun json-encode (json-object &optional (stream *error-output*))
   (yason:with-output (stream :indent *json-indent*)
     (yason:encode json-object)))
 

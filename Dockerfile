@@ -111,6 +111,7 @@ RUN sbcl --noinform \
          --disable-debugger \
          --no-userinit \
          --eval "(load \"cl-nomic-supervisor.asd\")" \
+         --eval "(load \"cl-nomic-supervisor.asd\")" \
          --eval "(require :cl-nomic-supervisor)" \
          --quit
 

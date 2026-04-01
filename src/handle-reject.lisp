@@ -1,6 +1,12 @@
 (in-package :cl-nomic-supervisor)
 
 (defun handle-reject (augmented &optional message)
-  (format t "REJECT: ~A ~A~%" #{augmented id} message)
-  ;; close the #{augmented pull_request id}
-  )
+  (close-pull-request #{augmented pull_request number}
+                      :additional `(("title" . ,(format nil "REJECTED: ~A~%" #{augmented pull_request title}))
+                                    ("body" . ,(format nil "~A~%~%----~%~A~%~A~%"
+                                                       (if (not (eql #{augmented pull_request body} :null))
+                                                           #{augmented pull_request body}
+                                                           "")
+                                                       (or message
+                                                           "")
+                                                       "Commited by CL-NOMIC-SUPERVISOR")))))

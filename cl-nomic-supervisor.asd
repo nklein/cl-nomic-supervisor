@@ -26,7 +26,8 @@
                  (:file "github-api" :depends-on ("package"
                                                   "http-constants"
                                                   "http-utils"
-                                                  "json-utils"))
+                                                  "json-utils"
+                                                  "git-cli"))
                  (:file "game" :depends-on ("package"))
                  (:file "handle-winner" :depends-on ("package"
                                                      "github-api"))
