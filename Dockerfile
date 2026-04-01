@@ -96,7 +96,7 @@ RUN sbcl --noinform \
          --disable-debugger \
          --no-userinit \
          --eval "(load \"./quicklisp/bundle.lisp\")" \
-         --eval "(dolist (pkg '(:alexandria :quri :local-time :yason :dexador :toot)) (require pkg))" \
+         --eval "(dolist (pkg '(:alexandria :quri :local-time :yason :dexador)) (require pkg))" \
          --quit
 
 COPY README.md ./

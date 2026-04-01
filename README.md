@@ -4,7 +4,7 @@
 
 ### Preparing quicklisp bundles
 
-    (ql:bundle-systems '(:alexandria :quri :local-time :yason :dexador :toot) :to #P"./quicklisp")
+    (ql:bundle-systems '(:alexandria :quri :local-time :yason :dexador) :to #P"./quicklisp")
 
 ### Building with Docker
 
