@@ -8,7 +8,7 @@
 
 ### Building with Docker
 
-    VERSION=0.1.20260322
+    VERSION=0.2.20260402
     docker build -t cl-nomic-supervisor:${VERSION} -t cl-nomic-supervisor:latest .
 
 ### Running with Docker
@@ -20,9 +20,6 @@
     set -o allexport; . ./.env; set +o allexport
 
 ## Development Notes
-
-* **TODO:** Need to add information about commits so that the decision-maker
-  can take into account comments that happened before the last commit.
 
 Need to figure out GitHub webhooks that will notify me when there is
 a new code-review on an open pull-request for a given repo.
@@ -75,47 +72,3 @@ it will revert the last merge request and then restart.
 runtime rather than compile-time, then this might be too draconian
 and possible to abuse? More thinking needed. Maybe only if it exited
 with non-zero status?
-
-### bwrap command-line
-
-    bwrap --ro-bind /bin /bin \
-          --ro-bind /lib /lib \
-          --ro-bind /usr/bin /usr/bin \
-          --ro-bind /usr/local /usr/local \
-          --bind /game /game \
-          --unshare-all \
-          --unshare-user \
-          --uid "${GAME_UID}" \
-          --gid "${GAME_GID}" \
-          --new-session \
-          --hostname nomic-game \
-          --chdir /game \
-          --clearenv \
-          --setenv HOME /game \
-          --setenv PATH "/bin:/usr/bin:/usr/local/bin" \
-          --die-with-parent
-          /game/start.sh
-
-**TODO:** Find out if I can create some pipes and use the `--sync-fd` option to give the
-child process some `stdin`, `stdout`, and `stderr`? Or do I use `--file`?
-
-    --mkdir /dev \
-    --perm 0400 --bind-data ${STDIN_FD} /dev/stdin \
-    --perm 0200 --bind-data ${STDOUT_FD} /dev/stdout \
-    --perm 0200 --bind-data ${STDERR_FD} /dev/stderr
-
-With something like this in `/game/start.sh`:
-
-    #!/bin/sh
-    exec /usr/local/bin/sbcl --noinform \
-                             --eval '(setf *compile-verbose* nil)' \
-                             --eval '(setf *load-verbose* nil)' \
-                             --eval '(require "asdf")' \
-                             --eval '(load "./game.asd")' \
-                             --eval '(asdf:load-system :game)' \
-                             --quit
-
-But, a super simple game could instead have `/game/start.sh`:
-
-    #!/bin/sh
-    echo '{decision: "winner", name: "patrick"}' > /dev/stdout
