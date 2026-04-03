@@ -1,4 +1,5 @@
 (in-package :cl-nomic-supervisor)
 
 (defun handle-unknown (response)
-  t)
+  (format *error-output* "UNKNOWN-MESSAGE: ~A~%" response)
+  nil)
