@@ -1,8 +1,10 @@
 (in-package :cl-nomic-supervisor)
 
+(named-readtables:in-readtable :json-reader-macro)
+
 (defun find-augmented-by-id (id list-of-augmented)
   (flet ((get-augmented-id (augmented)
-           #{augmented id}))
+           {augmented id}))
     (find id list-of-augmented
           :key #'get-augmented-id)))
 
@@ -26,18 +28,18 @@
       (handler-case
           (let* ((response (json-parse response-string))
                  (decision (ignore-errors
-                            (string-downcase #{response decision}))))
+                            (string-downcase {response decision}))))
             (json-encode response *debug-io*)
             (fresh-line *debug-io*)
             (cond
               ((string= "winner" decision)
-               (handle-winner #{response name}
-                              (ignore-errors #{response message})))
+               (handle-winner {response name}
+                              (ignore-errors {response message})))
               ((string= "accept" decision)
-               (handle-accept (find-augmented-by-id #{response id} list-of-augmented)
-                              (ignore-errors #{response message})))
+               (handle-accept (find-augmented-by-id {response id} list-of-augmented)
+                              (ignore-errors {response message})))
               ((string= "reject" decision)
-               (handle-reject (find-augmented-by-id #{response id} list-of-augmented)))
+               (handle-reject (find-augmented-by-id {response id} list-of-augmented)))
               (t
                (handle-unknown response))))
         (error (err)

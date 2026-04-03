@@ -9,7 +9,7 @@
   :author "Patrick Stein <pat@nklein.com>"
   :license "UNLICENSE"
   :version "0.2.20260402"
-  :depends-on (:alexandria :quri :local-time :yason :dexador)
+  :depends-on (:alexandria :quri :local-time :yason :named-readtables :dexador)
   :components
   ((:static-file "README.md")
    (:static-file "UNLICENSE.txt")
@@ -32,7 +32,8 @@
                  (:file "handle-winner" :depends-on ("package"
                                                      "github-api"))
                  (:file "handle-accept" :depends-on ("package"
-                                                     "github-api"))
+                                                     "github-api"
+                                                     "reader-macro"))
                  (:file "handle-reject" :depends-on ("package"
                                                      "github-api"))
                  (:file "handle-defer" :depends-on ("package"))

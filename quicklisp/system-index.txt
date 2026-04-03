@@ -34,6 +34,16 @@ software/global-vars-20141106-git/global-vars.asd
 software/idna-20120107-git/idna.asd
 software/local-time-20260101-git/cl-postgres+local-time.asd
 software/local-time-20260101-git/local-time.asd
+software/mgl-pax-20260101-git/autoload/autoload.asd
+software/mgl-pax-20260101-git/dref/dref-test.asd
+software/mgl-pax-20260101-git/dref/dref.asd
+software/mgl-pax-20260101-git/dref/test/data/dref-test-package-inferred.asd
+software/mgl-pax-20260101-git/mgl-pax-bootstrap.asd
+software/mgl-pax-20260101-git/mgl-pax-test.asd
+software/mgl-pax-20260101-git/mgl-pax.asd
+software/mgl-pax-20260101-git/mgl-pax.asdf.asd
+software/named-readtables-20260101-git/named-readtables-test.asd
+software/named-readtables-20260101-git/named-readtables.asd
 software/proc-parse-20190813-git/proc-parse-test.asd
 software/proc-parse-20190813-git/proc-parse.asd
 software/quri-20260101-git/quri-test.asd
