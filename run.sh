@@ -16,7 +16,9 @@
 ################################################################
 
 IMAGE=${IMAGE:-cl-nomic-supervisor}
+got_IMAGE=0
 VERSION=${VERSION:-latest}
+got_VERSION=0
 ENVFILE=${ENVFILE:-.env}
 FORCE=0
 
@@ -130,6 +132,8 @@ do_passes() {
             2) err "Something went wrong"
                return 1
                ;;
+            *) err "Unexpected return code: $?"
+               return $?
         esac
     done
 }
@@ -145,11 +149,13 @@ parse_args() {
         case "${1}" in
             --image)
                 IMAGE="${2}";
+                got_IMAGE=1;
                 shift;
                 ;;
 
             --version)
                 VERSION="${2}";
+                got_VERSION=1;
                 shift;
                 ;;
 
@@ -177,9 +183,35 @@ parse_args() {
     done
 }
 
+load_env() {
+    if [ -f "${ENVFILE}" ]; then
+        local old_IMAGE="${IMAGE}"
+        local old_VERSION="${VERSION}"
+
+        echo "${color_teal}Sourcing ${color_yellow}${ENVFILE}${color_off}"
+        . "${ENVFILE}"
+
+        #
+        # If the ENVFILE overwrote anything
+        # we had gotten from the command-line,
+        # then we should keep the version from
+        # the command-line
+        #
+        for var in "IMAGE" "VERSION"; do
+            local got_var="got_${var}"
+            local old_var="old_${var}"
+            if [ "${!got_var}" = 1 ]; then
+                eval "${var}=\"${!old_var}\""
+            fi
+        done
+    fi
+}
+
 main() {
     setup_colors
     parse_args "$@"
+    load_env "$@"
+
     do_passes
 }
 
