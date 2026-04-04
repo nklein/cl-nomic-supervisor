@@ -8,7 +8,7 @@
   :description "CL-NOMIC-SUPERVISOR"
   :author "Patrick Stein <pat@nklein.com>"
   :license "UNLICENSE"
-  :version "0.3.20260404"
+  :version "0.4.20260404"
   :depends-on (:alexandria :bordeaux-threads :quri :local-time :yason :named-readtables :dexador)
   :components
   ((:static-file "README.md")
