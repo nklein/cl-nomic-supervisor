@@ -61,11 +61,13 @@ It is probably easiest to name the `.env` file after your repository (e.g. `.env
 It should contain:
 
     # note to self about expiration date of token?
+    IMAGE=py-nomic-supervisor
     GITHUB_SUPERVISOR_TOKEN=<the-token-from-above>
     GITHUB_REPO_OWNER=nklein
     GITHUB_REPO_NAME=py-nomic-draconic-snow
 
 Obviously, correct the name of your repository and fill in your token.
+The `IMAGE` lets you set the supervisor docker image name to use if not given on the command-line to `run.sh`.
 
 ### Manually running it
 
