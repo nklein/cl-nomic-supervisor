@@ -8,7 +8,7 @@
 
 ### Building with Docker
 
-    VERSION=0.2.20260402
+    VERSION=0.3.20260403
     docker build -t cl-nomic-supervisor:${VERSION} -t cl-nomic-supervisor:latest .
 
 ### Running with Docker
