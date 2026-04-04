@@ -40,6 +40,8 @@
                               (ignore-errors {response message})))
               ((string= "reject" decision)
                (handle-reject (find-augmented-by-id {response id} list-of-augmented)))
+              ((string= "defer" decision)
+               (handle-defer))
               (t
                (handle-unknown response))))
         (error (err)
