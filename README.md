@@ -1,5 +1,7 @@
 # CL-NOMIC-SUPERVISOR
 
+There is a separate document describing [how to start a new game](docs/CREATE-GAME.md).
+
 ## Use of Docker
 
 ### Preparing quicklisp bundles
