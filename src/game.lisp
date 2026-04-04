@@ -1,6 +1,9 @@
 (in-package :cl-nomic-supervisor)
 
-(defparameter *game-directory* #P"/game/")
+(defvar *game-directory* #P"/game/")
+
+(defparameter *game-lock* (bt2:make-lock :name "GAME-LOCK"))
+(defparameter *game-condition* (bt2:make-condition-variable :name "GAME-COND"))
 
 (defun invoke-game (list-of-augmented)
   (let ((encoded (json-encode* list-of-augmented)))
@@ -28,3 +31,26 @@
                         :error-output 'cl:string
                         :ignore-error-status t
                         :force-shell nil))))
+
+(defun invoke-game-test (list-of-augmented)
+  list-of-augmented)
+
+(defun invoke-game-in-thread (list-of-augmented)
+  (flet ((call-game ()
+           (prog1
+               (ignore-errors
+                (invoke-game list-of-augmented))
+             (bt2:with-lock-held (*game-lock*)
+               (bt2:condition-notify *game-condition*)))))
+    (bt2:make-thread #'call-game :name "GAME-THREAD")))
+
+(defun invoke-game-with-timelimit (list-of-augmented wait-time-in-seconds)
+  (bt2:with-lock-held (*game-lock*)
+    (let ((thread (invoke-game-in-thread list-of-augmented)))
+      (if (bt2:condition-wait *game-condition* *game-lock* :timeout wait-time-in-seconds)
+          (bt2:join-thread thread)
+          (error 'simple-error :format-control "TIMEOUT: ~A"
+                               :format-arguments (list wait-time-in-seconds))))))
+
+#+(or)
+(invoke-game-with-timelimit '(:a :b :c) 3)

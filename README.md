@@ -6,7 +6,7 @@ There is a separate document describing [how to start a new game](docs/CREATE-GA
 
 ### Preparing quicklisp bundles
 
-    (ql:bundle-systems '(:alexandria :quri :local-time :yason :named-readtables :dexador) :to #P"./quicklisp")
+    (ql:bundle-systems '(:alexandria :bordeaux-threads :quri :local-time :yason :named-readtables :dexador) :to #P"./quicklisp")
 
 ### Building with Docker
 
