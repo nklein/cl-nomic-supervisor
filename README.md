@@ -8,12 +8,11 @@
 
 ### Building with Docker
 
-    VERSION=0.3.20260404
-    docker build -t cl-nomic-supervisor:${VERSION} -t cl-nomic-supervisor:latest .
+    ./build.sh
 
 ### Running with Docker
 
-    docker run --env-file .env cl-nomic-supervisor
+    ./run.sh
 
 ### Loading .env file for local use
 
