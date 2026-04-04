@@ -9,6 +9,7 @@
                               "--ro-bind" "/bin" "/bin"
                               "--ro-bind" "/lib" "/lib"
                               "--ro-bind" "/usr/bin" "/usr/bin"
+                              "--ro-bind" "/usr/lib" "/usr/lib"
                               "--ro-bind" "/usr/local" "/usr/local"
                               "--bind" "/game" "/game"
                               "--unshare-all"
