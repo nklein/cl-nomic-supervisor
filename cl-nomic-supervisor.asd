@@ -9,7 +9,7 @@
   :author "Patrick Stein <pat@nklein.com>"
   :license "UNLICENSE"
   :version "0.3.20260404"
-  :depends-on (:alexandria :quri :local-time :yason :named-readtables :dexador)
+  :depends-on (:alexandria :bordeaux-threads :quri :local-time :yason :named-readtables :dexador)
   :components
   ((:static-file "README.md")
    (:static-file "UNLICENSE.txt")
@@ -28,7 +28,8 @@
                                                   "http-utils"
                                                   "json-utils"
                                                   "git-cli"))
-                 (:file "game" :depends-on ("package"))
+                 (:file "game" :depends-on ("package"
+                                            "cli"))
                  (:file "handle-winner" :depends-on ("package"
                                                      "github-api"))
                  (:file "handle-accept" :depends-on ("package"

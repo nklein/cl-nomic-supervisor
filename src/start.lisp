@@ -2,6 +2,8 @@
 
 (named-readtables:in-readtable :json-reader-macro)
 
+(alexandria:define-constant +MAXIMUM-GAME-RUNTIME-IN-SECONDS+ 60)
+
 (defun force-mode-p ()
   (let ((force (uiop:getenv "FORCE")))
     (and force
@@ -50,9 +52,8 @@
 
     (freshly-fetch-game-code)
 
-    (let* ((response-string (with-output-to-string (*standard-output*)
-                              (cli-chain
-                                (invoke-game list-of-augmented))))
+    (let* ((response-string (invoke-game-with-timelimit list-of-augmented
+                                                        +MAXIMUM-GAME-RUNTIME-IN-SECONDS+))
            (response (json-parse response-string))
            (decision (ignore-errors
                       (string-downcase {response decision}))))
@@ -85,8 +86,8 @@
        (do-pass))
     (error (err)
       (let ((*print-escape* nil))
-        (format *error-output* "ERROR: ~A~%" err)
-        :something-errored))))
+        (format *error-output* "ERROR: ~A~%" err))
+      :something-errored)))
 
 (defun start ()
   (let ((*git-working-copy-dir* *game-directory*)
