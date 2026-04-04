@@ -15,7 +15,8 @@
                                                       "")
                                                   "Commited by CL-NOMIC-SUPERVISOR"))))
     (create-tag-reference +GAME-OVER-TAG+
-                          {tag sha})))
+                          {tag sha})
+    :declared-winner))
 
 (defun game-over-p ()
   "Try to retrieve for +GAME-OVER-TAG+ and return NIL if not found and non-NIL otherwise."

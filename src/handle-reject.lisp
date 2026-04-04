@@ -11,4 +11,5 @@
                                                            "")
                                                        (or message
                                                            "")
-                                                       "Commited by CL-NOMIC-SUPERVISOR")))))
+                                                       "Commited by CL-NOMIC-SUPERVISOR"))))
+  :something-changed)

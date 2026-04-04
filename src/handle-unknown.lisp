@@ -1,5 +1,6 @@
 (in-package :cl-nomic-supervisor)
 
 (defun handle-unknown (response)
-  (format *error-output* "UNKNOWN-MESSAGE: ~A~%" response)
-  nil)
+  (error 'simple-error
+         :format-control "UNKNOWN-MESSAGE: ~A~%"
+         :format-arguments (list response)))

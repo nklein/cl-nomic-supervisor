@@ -84,6 +84,7 @@ RUN apk add bubblewrap \
     && git config --global user.name "CL-NOMIC Supervisor" \
     && git config --global user.email "pat@nklein.com"
 
+RUN apk add --update --no-cache nodejs npm
 RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
 
 RUN mkdir /game
