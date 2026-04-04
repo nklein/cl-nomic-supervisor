@@ -21,7 +21,10 @@
 
     ((null list-of-augmented)
      (format *standard-output* "No open pull requests.~%")
-     nil)))
+     nil)
+
+    (t
+     t)))
 
 (defun find-augmented-by-id (id list-of-augmented)
   (flet ((get-augmented-id (augmented)
@@ -86,15 +89,19 @@
         :something-errored))))
 
 (defun start ()
-  (let ((*git-repo-url* (uiop:getenv "GIT_REPO_URL"))
-        (*git-default-branch* "main")
-        (*git-default-remote* "origin")
-        (*git-working-copy-dir* *game-directory*)
+  (let ((*git-working-copy-dir* *game-directory*)
         (*github-api-token* (uiop:getenv "GITHUB_SUPERVISOR_TOKEN"))
         (*github-repo-owner* (uiop:getenv "GITHUB_REPO_OWNER"))
         (*github-repo-name* (uiop:getenv "GITHUB_REPO_NAME")))
-    (uiop:quit (case (safely-do-pass)
-                 (:nothing-changed   0)
-                 (:declared-winner   0)
-                 (:something-changed 1)
-                 (otherwise          2)))))
+    (let ((*git-repo-url* (or (uiop:getenvp "GITHUB_REPO_URL")
+                              (format nil "https://github.com/~A/~A.git"
+                                      *github-repo-owner*
+                                      *github-repo-name*)))
+          (*git-default-branch* (or (uiop:getenvp "GITHUB_REPO_BRANCH")
+                                    "main"))
+          (*git-default-remote* "origin"))
+      (uiop:quit (case (safely-do-pass)
+                   (:nothing-changed   0)
+                   (:declared-winner   0)
+                   (:something-changed 1)
+                   (otherwise          2))))))
