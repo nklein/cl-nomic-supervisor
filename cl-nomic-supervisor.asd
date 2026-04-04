@@ -28,7 +28,8 @@
                                                   "http-utils"
                                                   "json-utils"
                                                   "git-cli"))
-                 (:file "game" :depends-on ("package"))
+                 (:file "game" :depends-on ("package"
+                                            "cli"))
                  (:file "handle-winner" :depends-on ("package"
                                                      "github-api"))
                  (:file "handle-accept" :depends-on ("package"
