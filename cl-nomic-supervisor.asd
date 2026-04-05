@@ -32,12 +32,14 @@
                                             "cli"))
                  (:file "handle-winner" :depends-on ("package"
                                                      "github-api"))
-                 (:file "handle-accept" :depends-on ("package"
+                 (:file "handle-defer" :depends-on ("package"))
+                 (:file "handle-reject" :depends-on ("package"
                                                      "github-api"
                                                      "reader-macro"))
-                 (:file "handle-reject" :depends-on ("package"
-                                                     "github-api"))
-                 (:file "handle-defer" :depends-on ("package"))
+                 (:file "handle-accept" :depends-on ("package"
+                                                     "github-api"
+                                                     "reader-macro"
+                                                     "handle-reject"))
                  (:file "handle-unknown" :depends-on ("package"
                                                       "github-api"))
                  (:file "start" :depends-on ("package"

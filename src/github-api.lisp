@@ -153,6 +153,12 @@
   :body (json-object `(("commit_title" . ,title)
                        ("commit_message" . ,message))))
 
+(define-github-api create-pull-request-comment (+POST+ (pull-number message)
+                                                       (owner *github-repo-owner*)
+                                                       (repo *github-repo-name*))
+    ("repos" owner repo "issues" pull-number "comments")
+  :body (json-object `(("body" . ,message))))
+
 (define-github-api close-pull-request (+PATCH+ (pull-number)
                                                (additional)
                                                (owner *github-repo-owner*)
