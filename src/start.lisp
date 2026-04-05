@@ -54,11 +54,13 @@
 
     (let* ((response-string (invoke-game-with-timelimit list-of-augmented
                                                         +MAXIMUM-GAME-RUNTIME-IN-SECONDS+))
-           (response (json-parse response-string))
+           (response (ignore-errors
+                      (json-parse response-string)))
            (decision (ignore-errors
                       (string-downcase {response decision}))))
-      (json-encode response *debug-io*)
-      (fresh-line *debug-io*)
+      (when response
+        (json-encode response *debug-io*)
+        (fresh-line *debug-io*))
       (cond
         ((string= "winner" decision)
          (handle-winner {response name}
@@ -71,7 +73,7 @@
         ((string= "defer" decision)
          (handle-defer))
         (t
-         (handle-unknown response))))))
+         (handle-unknown response-string))))))
 
 (defun safely-do-pass ()
   (handler-case
@@ -85,8 +87,8 @@
                 (handle-unknown unknown))
        (do-pass))
     (error (err)
-      (let ((*print-escape* nil))
-        (format *error-output* "ERROR: ~A~%" err))
+      (handle-unknown (let ((*print-escape* nil))
+                        (format nil "ERROR: ~A~%" err)))
       :something-errored)))
 
 (defun start ()

@@ -13,6 +13,14 @@
       *github-repo-owner* "nklein"
       *github-repo-name* "cl-nomic-game-test")
 
+(defun make-supervisor-for-github ()
+  (json-object `(("name" . "cl-nomic-supervisor")
+                 ("email" . "pat@nklein.com")
+                 ("date" .  ,(local-time:format-rfc3339-timestring
+                              nil
+                              (local-time:now)
+                              :timezone local-time:+utc-zone+)))))
+
 (defun %github-api (method path-as-list
                     &key
                       (token *github-api-token*)
@@ -87,6 +95,20 @@
                                                     (repo *github-repo-name*))
     ("repos" owner repo "pulls" pull-number "commits"))
 
+(define-github-api get-commit (+GET+ (commit-sha)
+                                     (owner *github-repo-owner*)
+                                     (repo *github-repo-name*))
+    ("repos" owner repo "git" "commits" commit-sha))
+
+(define-github-api create-commit (+POST+ (message parent tree)
+                                         (owner *github-repo-owner*)
+                                         (repo *github-repo-name*))
+    ("repos" owner repo "git" "commits")
+  :body (json-object `(("message" . ,message)
+                       ("author" . ,(make-supervisor-for-github))
+                       ("parents" . (,parent))
+                       ("tree" . ,tree))))
+
 (define-github-api get-tag-reference (+GET+ (tag)
                                             (owner *github-repo-owner*)
                                             (repo *github-repo-name*))
@@ -108,12 +130,14 @@
                            `(("message" . ,message)))
                        ("object" . ,sha)
                        ("type" . "commit")
-                       ("tagger" . ,(json-object `(("name" . "cl-nomic-supervisor")
-                                                   ("email" . "pat@nklein.com")
-                                                   ("date" .  ,(local-time:format-rfc3339-timestring
-                                                                nil
-                                                                (local-time:now)
-                                                                 :timezone local-time:+utc-zone+))))))))
+                       ("tagger" . ,(make-supervisor-for-github)))))
+
+(define-github-api update-branch-reference (+PATCH+ (branch-name sha)
+                                                (owner *github-repo-owner*)
+                                                (repo *github-repo-name*))
+    ("repos" owner repo "git" "refs" "heads" branch-name)
+  :body (json-object `(("sha" . ,sha)
+                       ("force" . t))))
 
 (define-github-api create-tag-reference (+POST+ (tag sha)
                                                 (owner *github-repo-owner*)
