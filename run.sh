@@ -134,6 +134,7 @@ do_passes() {
                ;;
             *) err "Unexpected return code: $?"
                return $?
+               ;;
         esac
     done
 }
