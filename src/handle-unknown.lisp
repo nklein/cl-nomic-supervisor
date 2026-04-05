@@ -17,7 +17,7 @@
          (main-commit-parent-sha {(first {main-commit parents}) sha})
          (tag-commit (create-commit-tag tag-name
                                         original-sha
-                                        :message (format nil "Reverting: ~A (~A)~%~%~A~%----~%RESPONSE:~%~A~%~%----~%~A~%"
+                                        :message (format nil "Reverting: ~A (~A)~%~%~A~%~%----~%RESPONSE:~%~A~%----~%~A~%"
                                                          original-sha
                                                          tag-name
                                                          {main-commit message}
